@@ -39,24 +39,21 @@
                         }
                     }
                 });
-                socket.emit('subscribe', playerId);
-                socket.emit('subscribe', "test");
+                socket.emit('subscribe', playerId, function (done) {
+                    if (!done) {
+                        alert("player id not allowed")
+                    }
+                });
+                socket.emit('subscribe', "test", function (done) {
+                    if (!done) {
+                        alert("test not allowed")
+                    }
+                });
 
                 socket.on('message', function (msg) {
                     $('#messages').append($('<li>').text(JSON.stringify(msg)));
                 });
             });
-
-
-
-        // $('form').submit(function(){
-        //     socket.emit('chat message', $('#m').val());
-        //     $('#m').val('');
-        //     return false;
-        // });
-        // socket.on('chat message', function(msg){
-        //     $('#messages').append($('<li>').text(msg));
-        // });
     });
 </script>
 

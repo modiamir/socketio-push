@@ -2,19 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Player  = require('../models/player');
 
-router.post('/', (req, res) => {
-    Player.create({
-        playerId: req.body.playerId
-    }, (err, task) => {
-        if (err) {
-            console.log('CREATE Error: ' + err);
-            res.status(500).send('Error');
-        } else {
-            res.status(200).json(task);
-        }
-    });
-});
-
 router.post('/init', (req, res) => {
     Player.find({ uuid: req.body.uuid }).exec((err, result) => {
         if (err) {

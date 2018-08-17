@@ -4,7 +4,8 @@ let app = require('express')();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
 let bodyParser = require('body-parser');
-const Player  = require('./models/player');
+const Player = require('./models/player');
+const Acl = require('./models/acl');
 
 mongoose.connect('mongodb://172.17.0.4:27017/push');
 const db = mongoose.connection;
@@ -30,10 +31,16 @@ db.once('open', () => {
     });
 
     const transactionsCollection = db.collection('transactions');
-    io.on('connection', function(socket){
+    io.on('connection', async function(socket){
         let playerId = socket.handshake.headers['x-player-id'];
-        socket.on("subscribe", msg => {
-            socket.join(msg);
+        let player = await Player.findOne({playerId: playerId}).exec();
+        socket.on("subscribe", async function(topic, fn) {
+            if (topic === playerId || await Acl.allowedTopic(topic, player.owner)) {
+                socket.join(topic);
+                fn(true)
+            } else {
+                fn(false)
+            }
         });
     });
 

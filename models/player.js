@@ -3,10 +3,15 @@ const Schema   = mongoose.Schema;
 
 const playerSchema = new Schema({
     playerId: {
-        type: String
+        type: String,
+        index: true,
     },
     uuid: {
-        type: String
+        type: String,
+        index: true
+    },
+    owner: {
+        type: String,
     }
 });
 

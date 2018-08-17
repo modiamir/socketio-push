@@ -1,18 +1,20 @@
 const express = require('express');
-const Transaction  = require('../models/transaction');
+const Transaction = require('../models/transaction');
+const Acl = require('../models/acl');
 const router = express.Router();
 
-router.post('/', (req, res) => {
+
+router.post('/', function(req, res) {
     Transaction.create({
         data: req.body.data,
         playerId: req.body.playerId,
         topic: req.body.topic
-    }, (err, task) => {
+    }, function(err, transaction) {
         if (err) {
             console.log('CREATE Error: ' + err);
             res.status(500).send('Error');
         } else {
-            res.status(200).json(task);
+            res.status(200).json(transaction);
         }
     });
 });
